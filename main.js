@@ -9,11 +9,33 @@ function computerPlay() {
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+ 
+function getPlayerSelection(round, playerScore, computerScore) {
+    const validChoices = ["rock", "paper", "scissors"];
+
+    while (true) {
+        let playerSelection = prompt(
+            `Round ${round} — Score: Player ${playerScore}, Computer ${computerScore}\n\nEnter Rock, Paper, or Scissors`
+        );
+
+        if (playerSelection === null) {
+            alert("Game cancelled.");
+            return null;
+        }
+
+        playerSelection = playerSelection.trim().toLowerCase();
+
+        if (playerSelection === "") {
+            alert("You must enter Rock, Paper, or Scissors!");
+        } else if (!validChoices.includes(playerSelection)) {
+            alert("Invalid choice! Please enter only Rock, Paper, or Scissors.");
+        } else {
+            return playerSelection;
+        }
+    }
+}
 
 function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase();
-    computerSelection = computerSelection.toLowerCase();
-
     if (playerSelection === computerSelection) {
         return "Draw!";
     } else if (
@@ -32,23 +54,10 @@ function game() {
     let computerScore = 0;
 
     for (let i = 1; i <= 5; i++) {
-        let playerSelection;
+        let playerSelection = getPlayerSelection(i, playerScore, computerScore);
+        if (playerSelection === null) return; 
 
-        while (true) {
-            playerSelection = prompt(`Round ${i}: Enter Rock, Paper, or Scissors`);
-            if (playerSelection === null) {
-                alert("Game cancelled.");
-                return; 
-            }
-            playerSelection = playerSelection.trim();
-            if (playerSelection === "") {
-                alert("You must enter Rock, Paper, or Scissors!");
-            } else {
-                break; 
-            }
-        }
-
-        const computerSelection = computerPlay();
+        const computerSelection = computerPlay().toLowerCase();
         const result = playRound(playerSelection, computerSelection);
 
         alert(result);
@@ -60,7 +69,7 @@ function game() {
         }
     }
 
-    alert(`Score: Player ${playerScore} — Computer ${computerScore}`);
+    alert(`Final Score: Player ${playerScore} — Computer ${computerScore}`);
     if (playerScore > computerScore) {
         alert("🎉 You won the game!");
     } else if (playerScore < computerScore) {
@@ -70,7 +79,6 @@ function game() {
     }
 }
 
-
 do {
-  game();
+    game();
 } while (confirm("Do you want to play again?"));
